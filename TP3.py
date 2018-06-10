@@ -67,10 +67,10 @@ class Gunpla():
     """Representa un Gunpla. Un Gunpla está copuesto por un Esqueleto,
      un conjunto de partes y un conjunto de armas"""
     def __init__(self):
-        self.partes    = [] #lista de partes adosadas al Gunpla
-        self.esqueleto = None #referencia a una instancia de la clase Esqueleto
-        self.movilidad = 0 #Siendo base la movilidad del esqueleto, peso el peso del Gunpla y velocidad la velocidad del Gunpla: movilidad = (base - peso / 2 + velocidad * 3) / base movilidad = (base - peso / 2 + velocidad * 3) / base
-        self.armas     = [] #lista de armas adosadas al Gunpla
+        self.partes             = [] #lista de partes adosadas al Gunpla
+        self.esqueleto          = None #referencia a una instancia de la clase Esqueleto
+        self.armas              = [] #lista de armas adosadas al Gunpla
+        self.energia_restante   = self.get_energia()
 
     def get_peso(self):
         '''Devuelve el peso total del Gunpla.
@@ -126,12 +126,14 @@ class Gunpla():
 
     def get_energia_restante(self):
         '''Devuelve la energía que le resta al Gunpla'''
-        return ''''''
+        pass
 
     def get_movilidad(self):
-        '''Devuelve la movilidad de un Gunpla.
-        Se calcula según la fórmula descripta en la seccion de fórmulas'''
-        return self.movilidad
+        '''Devuelve la movilidad de un Gunpla'''
+        base = self.esqueleto.get_movilidad()
+        peso = self.get_peso()
+        velocidad = self.get_velocidad()
+        return (base - peso/2 + velocidad *3) / base
 
     def get_armamento(self):
         '''Devuelve una lista con todas las armas adosadas al Gunpla
@@ -148,7 +150,7 @@ class Esqueleto():
     """Representa el esqueleto interno de un Gunpla"""
     def __init__(self):
         self.velocidad = velocidad      #valor fijo
-        self.energia   = energia        #valor fijo
+        self.energia   = energia        #valor fijo >0
         self.movilidad = movilidad      #valor fijo
         self.slots     = slots          #valor fijo
 
@@ -172,31 +174,40 @@ class Esqueleto():
 class Parte():
     """Representa una parte de un Gunpla"""
     def __init__(self):
-        self.peso       = peso
-        self.armadura   = armadura
-        self.escudo     = escudo
-        self.velocidad  = velocidad
-        self.energia    = energia
-        self.armamento  = armamento
-        self.tipo_parte = tipo
+        self.peso_base          = peso_base #valor fijo >0
+        self.armadura_base      = armadura_base
+        self.escudo_base        = escudo
+        self.velocidad_base     = velocidad
+        self.energia_base       = energia
+        self.armas              = []
+        self.tipo_parte         = tipo
 
     def get_peso(self):
         '''Devuelve el peso total de la parte.
         Una parte pesa lo que pesa la sumatoria de sus armas más el peso
         base de la parte'''
-        return self.peso
+        peso = self.peso_base
+        for arma in self.armas:
+            peso += arma.get_peso()
+        return peso
 
     def get_armadura(self):
         '''Devuelve la armadura total de la parte.
         Una parte tiene tanta armadura como la sumatoria de la armadura de
         sus armas más la armadura base de la parte'''
-        return self.armadura
+        armadura = self.armadura_base
+        for arma in self.armas:
+            armadura += arma.get_armadura()
+        return armadura
 
     def get_escudo(self):
         '''Devuelve el escudo total de la parte.
         Una parte tiene tanto escudo como la sumatoria del escudo de sus armas
         más el escudo base de la parte'''
-        return self.escudo
+        escudo = self.escudo_base
+        for arma in self.armas:
+            escudo += arma.get_escudo()
+        return escudo
 
     def get_velocidad(self):
         '''Devuelve la velocidad total de la parte.
@@ -208,11 +219,14 @@ class Parte():
         '''Devuelve la energía total de la parte.
         La parte tiene tanta energía como la sumatoria de la energía de
         sus armas más la energía base de la parte'''
-        return self.eneriga
+        energia = self.energia_base
+        for arma in self.armas:
+            energia += arma.get_energia()
+        return energia
 
     def get_armamento(self):
         '''Devuelve una lista con todas las armas adosadas a la parte'''
-        return self.armamento
+        return self.armas
 
     def get_tipo_parte(self):
         '''Devuelve una cadena que representa el tipo de parte'''
@@ -221,20 +235,20 @@ class Parte():
 class Arma():
     """Representa un arma"""
     def __init__(self):
-        self.peso           = peso
-        self.armadura       = armadura
-        self.escudo         = escudo
-        self.velocidad      = velocidad
-        self.energia        = energia
-        self.tipo_municion  = tipo_municion
-        self.tipo_arma      = tipo_arma
-        self.clase          = clase
-        self.daño           = daño
-        self.hits           = hits
-        self.precision      = precision
-        self.tiempo_recarga = tiempo_recarga
-        self.disponible     = lista
-        self.tipo_parte     = 'Arma'
+        self.peso           = peso              #valor fijo > 0
+        self.armadura       = armadura          #valor fijo
+        self.escudo         = escudo            #valor fijo
+        self.velocidad      = velocidad         #valor fijo
+        self.energia        = energia           #valor fijo
+        self.tipo_municion  = tipo_municion     #"FISICA"|"LASER"|"HADRON"'''
+        self.tipo_arma      = tipo_arma         #"MELEE"|"RANGO"
+        self.clase          = clase             #str que le da un 'nombre' al arma
+        self.daño           = daño              #valor fijo
+        self.hits           = hits              #valor fijo
+        self.precision      = precision         #valor fijo, probabilidad
+        self.tiempo_recarga = tiempo_recarga    #valor fijo, turnos hasta volver a usarla
+        self.disponible     = lista             #indica si el arma puede ser utilizada en este turno
+        self.tipo_parte     = 'Arma'            #siempre es arma
 
     def get_peso(self):
         '''Devuelve el peso del arma. Es un valor fijo'''
