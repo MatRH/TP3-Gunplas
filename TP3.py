@@ -126,7 +126,7 @@ class Gunpla():
 
     def get_energia_restante(self):
         '''Devuelve la energía que le resta al Gunpla'''
-        pass
+        return self.energia_restante
 
     def get_movilidad(self):
         '''Devuelve la movilidad de un Gunpla'''
@@ -145,14 +145,13 @@ class Gunpla():
             armas_disponibles.append(arma)
         return armas_disponibles
 
-
 class Esqueleto():
     """Representa el esqueleto interno de un Gunpla"""
     def __init__(self):
-        self.velocidad = velocidad      #valor fijo
-        self.energia   = energia        #valor fijo >0
-        self.movilidad = movilidad      #valor fijo
-        self.slots     = slots          #valor fijo
+        self.velocidad = 0          #valor fijo
+        self.energia   = 0          #valor fijo >0
+        self.movilidad = 100        #valor fijo >100
+        self.slots     = 0          #valor fijo
 
     def get_velocidad(self):
         '''Devuelve la velocidad del esqueleto'''
@@ -306,6 +305,44 @@ class Arma():
     def get_tipo_parte(self):
         '''Devuelve el tipo de parte de un arma. Siempre es "Arma"'''
         return self.tipo_parte
+
+class Piloto()
+    '''Inteligencia artificial para controlar un Gunpla.'''
+    def __init(self):
+        '''Crea un piloto y no recibe ningun parámetro'''
+        self.gunpla = Gunpla #Gunpla asociado al piloto
+
+    def set_gunpla(self, gunpla):
+        '''Asigna un Gunpla a un piloto'''
+        self.gunpla = gunpla
+
+    def get_gunpla(self):
+        '''Devuelve el Gunpla asociado al piloto'''
+        return self.gunpla
+
+    def elegir_esqueleto(lista_esqueletos):
+        '''Dada una lista de esqueletos, devuelve el índice del esqueleto a utilizar'''
+        return random.choice(lista_esqueletos)
+
+    def elegir_parte(partes_disponibles):
+        '''Dado un diccionario: {tipo_parte:parte}, devuelve el tipo de parte
+        que quiere elegir. Este metodo se utiliza para ir eligiendo de a una las
+        partes que se van a reservar para cada piloto, de entre las cuales va a
+        poder elegir para armar su modelo'''
+        return random.choice(partes_disponibles.keys())
+
+    def elegir_combinacion(partes_reservadas):
+        '''Dada una lista con partes previamente reservadas, devuelve una lista
+        con las partes a utilizar para construir el Gunpla. Este método se
+        utiliza para elegir las partes que se van a utilizar en el modelo, de
+        entre las que se reservaron previamente para cada piloto.'''
+        partes_utilizar = []
+        while len(partes_utilizar) < 5:
+            parte = random.choice(partes_reservadas)
+            if parte not in partes_utilizar:
+                partes_utilizar.append(parte)
+        return partes_utilizar
+
 
 '''Fórmulas
 Movilidad
