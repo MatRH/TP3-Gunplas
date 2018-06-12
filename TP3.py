@@ -145,6 +145,11 @@ class Gunpla():
             armas_disponibles.append(arma)
         return armas_disponibles
 
+     def _set_esqueleto(self,esqueleto):
+        '''Recibe un esqueleto y lo asigna al Gunpla.
+        '''
+        self.esqueleto = esqueleto
+
 class Esqueleto():
     """Representa el esqueleto interno de un Gunpla"""
     def __init__(self):
@@ -169,6 +174,7 @@ class Esqueleto():
         '''Devuelve la cantidad de slots (ranuras) para armas que
         tiene el esqueleto.'''
         return self.slots
+
 
 class Parte():
     """Representa una parte de un Gunpla"""
@@ -231,43 +237,22 @@ class Parte():
         '''Devuelve una cadena que representa el tipo de parte'''
         return self.tipo_parte
 
-class Arma():
+class Arma(Parte):
     """Representa un arma"""
     def __init__(self):
-        self.peso           = peso              #valor fijo > 0
-        self.armadura       = armadura          #valor fijo
-        self.escudo         = escudo            #valor fijo
-        self.velocidad      = velocidad         #valor fijo
-        self.energia        = energia           #valor fijo
-        self.tipo_municion  = tipo_municion     #"FISICA"|"LASER"|"HADRON"'''
+        self.tipo_municion  = tipo_municion     #"FISICA"|"LASER"|"HADRON"
         self.tipo_arma      = tipo_arma         #"MELEE"|"RANGO"
         self.clase          = clase             #str que le da un 'nombre' al arma
         self.daño           = daño              #valor fijo
         self.hits           = hits              #valor fijo
         self.precision      = precision         #valor fijo, probabilidad
         self.tiempo_recarga = tiempo_recarga    #valor fijo, turnos hasta volver a usarla
-        self.disponible     = lista             #indica si el arma puede ser utilizada en este turno
-        self.tipo_parte     = 'Arma'            #siempre es arma
-
-    def get_peso(self):
-        '''Devuelve el peso del arma. Es un valor fijo'''
-        return self.peso
-
-    def get_armadura(self):
-        '''Devuelve la armadura del arma. Es un valor fijo'''
-        return self.armadura
-
-    def get_escudo(self):
-        '''Devuelve la armadura del arma. Es un valor fijo'''
-        return self.escudo
+        self.disponible     = esta_lista             #indica si el arma puede ser utilizada en este turno
+        #self.tipo_parte     = 'Arma'            #siempre es arma
 
     def get_velocidad(self):
         '''Devuelve la velocidad del arma. Es un valor fijo'''
         return self.velocidad
-
-    def get_energia(self):
-        '''Devuelve la energía del arma. Es un valor fijo'''
-        return self.energia
 
     def get_tipo_municion(self):
         '''Devuelve el tipo de munición del arma: "FISICA"|"LASER"|"HADRON"'''
@@ -302,10 +287,7 @@ class Arma():
         '''Devuelve si el arma es capaz de ser utilizada en este turno o no'''
         return self.disponible
 
-    def get_tipo_parte(self):
-        '''Devuelve el tipo de parte de un arma. Siempre es "Arma"'''
-        return self.tipo_parte
-
+    
 class Piloto()
     '''Inteligencia artificial para controlar un Gunpla.'''
     def __init(self):
