@@ -98,6 +98,15 @@ def armar_equipos(lista_pilotos, cantidad_equipos):
 
     return lista_equipos
 
+def asignar_gunplas(lista_equipos):
+    '''Recibe la lista de equipos y le asigna un gunpla a cada piloto.
+    '''
+    for equipo in lista_equipos:
+        for piloto in equipo:
+            gunpla=Gunpla()
+            piloto.set_gunpla(gunpla)
+
+
 def generar_esqueletos(cantidad, velocidad_max, energia_max, movilidad_max, slots_max):
     '''Recibe una cantidad de esqueletos a generar, un valor maximo para Cada
     uno de los atributos correspondiente al esqueleto, velocidad, energia, movilidad
@@ -109,6 +118,7 @@ def generar_esqueletos(cantidad, velocidad_max, energia_max, movilidad_max, slot
     0   <= energia <= energia maxima ingresada
     100 <= movilidad <= movilidad maxima ingresada
     0 <= slots <= slots maximos ingresados
+    y los devuelve en una lista
     '''
     lista_esqueletos = []
     while len(esqueletos) < cantidad:
@@ -118,3 +128,123 @@ def generar_esqueletos(cantidad, velocidad_max, energia_max, movilidad_max, slot
         esqueleto.movilidad = random.randint(100, movilidad_max)
         esqueleto.slots = random.randint(0, slots_max)
         lista_esqueletos.append(esqueleto)
+    return lista_esqueletos
+
+
+def asignar_esqueletos(lista_esqueletos,lista_equipos):
+    '''Recibe una lista de esqueletos y una lista de equipos la cual es una lista de listas,
+    donde cada sublista es un equipo y cada elemento de la lista es un Piloto. Cada Piloto 
+    elige un esqueleto, y se le asigna a su Gunpla.
+    '''
+    for equipo in lista_equipos:
+        for piloto in equipo:
+            esqueleto_elegido = piloto.elegir_esqueleto()
+            piloto.get_gunpla()._set.esqueleto(esqueleto_elegido)
+
+def generar_armas(cantidad, daño,hits,precision,peso,armadura,escudo,velocidad,energia):
+    '''Recibe la cantidad de armas a generar, el daño,hits(cantidad de veces que puede atacar
+    en el mismo turno),precision ,peso , armadura, energia, escudo y velocidad maximos.
+     Devuelve la lista de armas generadas.
+    '''
+    lista_armas = []
+    while len(armas) < cantidad:
+        arma                = Arma()
+        arma.daño           = random.randint(1, daño)
+        arma.hits           = random.randint(1, hits )
+        arma.precision      = random.randint(0,precision )
+        arma.peso_base      = random.randint(1,peso)
+        arma.energia_base   = random.randint(-energia, energia)
+        arma.armadura_base  = random.randint(-armadura , armadura)
+        arma.escudo_base    = random.randint(-escudo , escudo)
+        arma.velocidad_base = random.randint(-velocidad, velocidad)
+        arma.tipo_parte     = 'Arma'
+        arma.tipo_municion  = random.choice(('FISICA', 'LASER', 'HADRON'))
+        arma.tipo_arma      = random.choice(('MELEE', 'RANGO'))
+        arma.clase          = #generador de nombres
+        lista_armas.append(arma)
+    return lista_armas
+
+def generar_partes(cantidad, peso, armadura, escudo, velocidad, energia, prob_armas, cant_max_armas):
+    '''Recibe la cantidad de partes a generar, el peso , armadura, energia, escudo ,velocidad maximos, 
+    la probabilidad de que la parte contenga armas y la cantidad maxima de armas que puede tener una parte.
+    Devuelve la lista de armas generadas.
+    '''
+    lista_partes = []
+    while len(lista_partes) < cantidad:
+        parte = Parte()
+        parte.peso_base          = random.randint(1, peso)
+        parte.armadura_base      = random.randint(-armadura , armadura)
+        parte.escudo_base        = random.randint(-escudo, escudo)
+        parte.velocidad_base     = random.randint(-velocidad, velocidad)
+        parte.energia_base       = random.randint(-energia, energia)
+        parte.armas              = []
+        parte.tipo_parte         = #generador de nombres
+        if random.randint(0,100) > prob_armas:
+            cantidad_armas = random.randint(1,cant_max_armas)
+            parte.armas.append(generar_armas(cantidad_armas, daño,hits,precision, peso ,armadura,escudo,velocidad,energia))
+    return lista_partes
+
+def separar_en_pilas(lista_armas,lista_partes):
+    '''Recibe las listas de armas y partes y las apila en pilas distintas segun su tipo. 
+    Devuelve una lista de pilas
+    '''
+    lista_pilas = []
+    pila_melee = Pila()
+    pila_rango = Pila()
+    for arma in lista_armas:
+        if arma.get_tipo == 'MELEE':
+            pila_melee.apilar(arma)
+
+        else:
+            pila_rango.apilar(arma)
+    lista_pilas.append(pila_melee)
+    lista_pilas.append(pila_rango)
+
+    for parte in lista_partes:
+        tipo = str(parte.get_tipo_parte())
+        if tipo not in lista_pilas:
+            tipo = Pila()
+            lista_pilas.append(tipo)
+        tipo.apilar(parte)
+    return lista_pilas
+
+def armar_ronda(lista_equipos):
+    '''Recibe la lista de equipos, la desordenada y devuelve una ronda con los pilotos desordenados.
+    '''
+    ronda=[]
+    numero_piloto = 0
+    for equipo in lista_equipos:
+        for piloto in equipo:
+            numero_piloto += 1
+            ronda.append((numero_piloto, piloto))
+    random.shuffle(ronda)
+    return ronda
+
+def reservar_partes(lista_pilas, ronda):
+    '''Recibe una lista de pilas disponibles para los gunplas y la ronda de pilotos
+    y reserva las partes que elige cada piloto siguiendo la ronda de turnos.
+    '''
+    partes_disponibles = {}
+    partes_reservadas = {}
+    
+    while lista_pilas:
+        for numero_piloto, piloto in ronda:
+            for pila in lista_pilas:
+                parte_disponible = pila.desapilar()
+                partes_disponibles[pila] = parte_disponible
+            parte_elegida = piloto.elegir_parte(partes_disponibles) #el piloto elige la parte
+            partes_disponibles.pop(parte_elegida)
+            partes_reservadas[numero_piloto] = parte_elegida #reserva la parte para el piloto
+
+            for pila, parte in partes_disponibles.items():#devuelve las partes que nadie agarro
+                pila.apilar(parte)
+    return partes_reservadas
+
+
+
+
+
+
+
+
+
