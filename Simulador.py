@@ -70,6 +70,7 @@ Armas:
 '''
 import random
 import TP3
+from operator import itemgetter
 
 def armar_equipos(lista_pilotos, cantidad_equipos):
     '''Recibe una lista de pilotos de la cual elige para armas equipos y una
@@ -133,7 +134,7 @@ def generar_esqueletos(cantidad, velocidad_max, energia_max, movilidad_max, slot
 
 def asignar_esqueletos(lista_esqueletos,lista_equipos):
     '''Recibe una lista de esqueletos y una lista de equipos la cual es una lista de listas,
-    donde cada sublista es un equipo y cada elemento de la lista es un Piloto. Cada Piloto 
+    donde cada sublista es un equipo y cada elemento de la lista es un Piloto. Cada Piloto
     elige un esqueleto, y se le asigna a su Gunpla.
     '''
     for equipo in lista_equipos:
@@ -165,7 +166,7 @@ def generar_armas(cantidad, daño,hits,precision,peso,armadura,escudo,velocidad,
     return lista_armas
 
 def generar_partes(cantidad, peso, armadura, escudo, velocidad, energia, prob_armas, cant_max_armas):
-    '''Recibe la cantidad de partes a generar, el peso , armadura, energia, escudo ,velocidad maximos, 
+    '''Recibe la cantidad de partes a generar, el peso , armadura, energia, escudo ,velocidad maximos,
     la probabilidad de que la parte contenga armas y la cantidad maxima de armas que puede tener una parte.
     Devuelve la lista de armas generadas.
     '''
@@ -185,7 +186,7 @@ def generar_partes(cantidad, peso, armadura, escudo, velocidad, energia, prob_ar
     return lista_partes
 
 def separar_en_pilas(lista_armas,lista_partes):
-    '''Recibe las listas de armas y partes y las apila en pilas distintas segun su tipo. 
+    '''Recibe las listas de armas y partes y las apila en pilas distintas segun su tipo.
     Devuelve una lista de pilas
     '''
     lista_pilas = []
@@ -226,7 +227,7 @@ def reservar_partes(lista_pilas, ronda):
     '''
     partes_disponibles = {}
     partes_reservadas = {}
-    
+
     while lista_pilas:
         for numero_piloto, piloto in ronda:
             for pila in lista_pilas:
@@ -240,11 +241,32 @@ def reservar_partes(lista_pilas, ronda):
                 pila.apilar(parte)
     return partes_reservadas
 
+def elegir_gunplas(ronda, partes_reservadas):
+    '''Recibe la ronda de pilotos y un diccionario de partes reservadas, donde
+    el numero asignado previamente a cada piloto es la clave y el valor son
+    las partes que este piloto reservó.
+    Devuelve un diccionario donde las claves son el numero de piloto y los
+    valores son las partes que eligió ese piloto'''
+    partes_armar_gunplas = {}
+    for numero_piloto, piloto in ronda:
+        partes_utilizar = piloto.elegir_combinacion(partes_reservadas[numero_piloto])
+        partes_armar_gunplas[numero_piloto] = partes_utilizar
+    return partes_armar_gunplas
 
+def equipar_gunplas(ronda, partes_armar_gunplas):
+    '''Recibe la ronda de pilotos y un diccionario de partes para armar los
+    Gunplas de cada piloto, donde las claves son el número de piloto y los
+    valores son las partes que este piloto eligió'''
+    pass
 
+def armar_cola_turnos(ronda):
+    '''Recibe la ronda de pilotos y los organiza según sus velocidades.
+    Devuelve una cola de pilotos ordenados según velocidades decrecientes.
+    '''
+    cola_turnos = Cola()
+    pilotos_velocidad = sorted(ronda, key= itemgetter(2).get_velocidad()) #itemgetter devuelve el segundo elemento de la tupla
+    for numero_piloto, piloto in pilotos_velocidad:
+        cola_turnos.encolar(piloto)
+    return cola_turnos
 
-
-
-
-
-
+        
