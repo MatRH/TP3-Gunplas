@@ -234,7 +234,7 @@ def reservar_partes(lista_pilas, ronda):
                 parte_disponible = pila.desapilar()
                 partes_disponibles[pila] = parte_disponible
             parte_elegida = piloto.elegir_parte(partes_disponibles) #el piloto elige la parte
-            partes_disponibles.pop(parte_elegida)
+            partes_disponibles.pop(index(parte_elegida))
             partes_reservadas[numero_piloto] = parte_elegida #reserva la parte para el piloto
 
             for pila, parte in partes_disponibles.items():#devuelve las partes que nadie agarro
@@ -257,7 +257,7 @@ def equipar_gunplas(ronda, partes_armar_gunplas):
     '''Recibe la ronda de pilotos y un diccionario de partes para armar los
     Gunplas de cada piloto, donde las claves son el número de piloto y los
     valores son las partes que este piloto eligió'''
-    pass
+    for
 
 def armar_cola_turnos(ronda):
     '''Recibe la ronda de pilotos y los organiza según sus velocidades.
@@ -268,5 +268,3 @@ def armar_cola_turnos(ronda):
     for numero_piloto, piloto in pilotos_velocidad:
         cola_turnos.encolar(piloto)
     return cola_turnos
-
-        
