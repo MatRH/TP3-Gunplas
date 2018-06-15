@@ -237,7 +237,7 @@ class Parte():
         '''Devuelve una cadena que representa el tipo de parte'''
         return self.tipo_parte
 
-class Arma(Parte):
+class Arma():
     """Representa un arma"""
     def __init__(self):
         self.tipo_municion  = tipo_municion     #"FISICA"|"LASER"|"HADRON"
@@ -247,8 +247,14 @@ class Arma(Parte):
         self.hits           = hits              #valor fijo
         self.precision      = precision         #valor fijo, probabilidad
         self.tiempo_recarga = tiempo_recarga    #valor fijo, turnos hasta volver a usarla
-        self.disponible     = esta_lista             #indica si el arma puede ser utilizada en este turno
-        #self.tipo_parte     = 'Arma'            #siempre es arma
+        self.disponible     = esta_lista        #indica si el arma puede ser utilizada en este turno
+        self.tipo_parte     = 'Arma'            #siempre es arma
+        self.peso           = peso              #valor fijo
+        self.armadura       = armadura          #valor fijo
+        self.escudo         =                   #valor fijo
+        self.velocidad      =                   #valor fijo
+        self.energia        =                   #valor fijo
+
 
     def get_velocidad(self):
         '''Devuelve la velocidad del arma. Es un valor fijo'''
@@ -286,6 +292,37 @@ class Arma(Parte):
     def esta_lista(self):
          '''Devuelve si el arma es capaz de ser utilizada en este turno o no'''
         return self.disponible
+
+    def get_peso(self):
+        '''Devuelve el peso total del arma.
+        '''
+        return self.peso
+        
+
+    def get_armadura(self):
+        '''Devuelve la armadura total del arma.
+        '''
+        return self.armadura
+
+    def get_escudo(self):
+        '''Devuelve el escudo total del arma.
+        '''
+        return self.escudo
+
+    def get_velocidad(self):
+        '''Devuelve la velocidad total del arma
+        '''
+        return self.velocidad
+
+    def get_energia(self):
+        '''Devuelve la energía total del arma.
+        '''
+        return self.energia
+        
+    def get_tipo_parte(self):
+        '''Devuelve el tipo de parte de un arma'''
+        return self.tipo_parte
+
 
     
 class Piloto():

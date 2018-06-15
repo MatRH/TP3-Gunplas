@@ -153,11 +153,11 @@ def generar_armas(cantidad, daño,hits,precision,peso,armadura,escudo,velocidad,
         arma.daño           = random.randint(1, daño)
         arma.hits           = random.randint(1, hits )
         arma.precision      = random.randint(0,precision )
-        arma.peso_base      = random.randint(1,peso)
-        arma.energia_base   = random.randint(-energia, energia)
-        arma.armadura_base  = random.randint(-armadura , armadura)
-        arma.escudo_base    = random.randint(-escudo , escudo)
-        arma.velocidad_base = random.randint(-velocidad, velocidad)
+        arma.peso           = random.randint(1,peso)
+        arma.energia        = random.randint(-energia, energia)
+        arma.armadura       = random.randint(-armadura , armadura)
+        arma.escudo         = random.randint(-escudo , escudo)
+        arma.velocidad      = random.randint(-velocidad, velocidad)
         arma.tipo_parte     = 'Arma'
         arma.tipo_municion  = random.choice(('FISICA', 'LASER', 'HADRON'))
         arma.tipo_arma      = random.choice(('MELEE', 'RANGO'))
@@ -307,6 +307,10 @@ def ciclo_de_juego(lista_equipos,cola_turnos):
             arma_elegida    = piloto.elegir_arma(oponente)
             #aplicar funcion atacar
         
+def calcular_daño(arma,gunpla):
+    '''Calcula el daño realizado al gunpla utilizando la formula de calculo de daño.
+    '''
+    
 
 
 
