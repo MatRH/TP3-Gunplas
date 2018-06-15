@@ -284,11 +284,11 @@ class Arma(Parte):
         return self.tiempo_recarga
 
     def esta_lista(self):
-        '''Devuelve si el arma es capaz de ser utilizada en este turno o no'''
+         '''Devuelve si el arma es capaz de ser utilizada en este turno o no'''
         return self.disponible
 
     
-class Piloto()
+class Piloto():
     '''Inteligencia artificial para controlar un Gunpla.'''
     def __init(self):
         '''Crea un piloto y no recibe ningun parámetro'''
@@ -325,7 +325,14 @@ class Piloto()
                 partes_utilizar.append(parte)
         return partes_utilizar
 
-
+    def elegir_oponente(self,lista_oponentes):
+        '''Dada una lista de oponentes,devuelve el indice del gunpla al cual se decide atacar.
+        '''
+        return index(random.choice(lista_oponentes))
+        
+    def elegir_arma(self,oponente):
+        '''Devuelve el arma con la cual se decide atacar al oponente.
+        '''
 '''Fórmulas
 Movilidad
 Siendo base la movilidad del esqueleto, peso el peso del Gunpla y velocidad la velocidad del Gunpla:

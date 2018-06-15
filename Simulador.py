@@ -268,3 +268,46 @@ def armar_cola_turnos(ronda):
     for numero_piloto, piloto in pilotos_velocidad:
         cola_turnos.encolar(piloto)
     return cola_turnos
+
+def esta_activo(piloto):
+    '''Recibe un piloto y evalua si este esta activo. Se considera activo cuando tiene energia mayor a 0.
+        Devuelve True si esta activo, False si no lo esta.
+    '''
+    return piloto.get_gunpla().get_energia() > 0
+
+def cantidad_equipos_activos(lista_equipos):
+    '''Recibe la lista de equipos y devuelve la cantidad de equipos con al menos un Gunpla activo.
+    '''
+    equipos_activos = 0
+    for equipo in lista_equipos:
+        for piloto in equipo:
+            if esta_activo(piloto):
+                equipos_activos += 1
+                break
+    return equipos_activos
+
+def generar_lista_oponentes(lista_equipos,piloto):
+    '''Recibe una lista de equipos y un piloto y devuelve la lista de oponentes.
+    '''
+    lista_oponentes = []
+    for equipo in lista_equipos:
+        if piloto not in equipo:
+            for oponente in equipo:
+                lista_oponentes.append(oponente)
+    return lista_oponentes
+
+def ciclo_de_juego(lista_equipos,cola_turnos):
+    '''
+    '''
+    while cantidad_equipos_activos(lista_equipos) >= 2:
+        piloto = cola_turnos.desencolar()
+        if esta_activo(piloto):
+            lista_oponentes = generar_lista_oponentes(piloto)
+            indice_oponente = piloto.elegir_oponente(lista_oponentes)
+            arma_elegida    = piloto.elegir_arma(oponente)
+            #aplicar funcion atacar
+        
+
+
+
+
