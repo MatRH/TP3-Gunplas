@@ -71,6 +71,7 @@ Armas:
 import random
 import TP3
 from operator import itemgetter
+from math import abs
 
 def armar_equipos(lista_pilotos, cantidad_equipos):
     '''Recibe una lista de pilotos de la cual elige para armas equipos y una
@@ -273,7 +274,7 @@ def esta_activo(piloto):
     '''Recibe un piloto y evalua si este esta activo. Se considera activo cuando tiene energia mayor a 0.
         Devuelve True si esta activo, False si no lo esta.
     '''
-    return piloto.get_gunpla().get_energia() > 0
+    return (piloto.get_gunpla().get_energia() > 0)
 
 def cantidad_equipos_activos(lista_equipos):
     '''Recibe la lista de equipos y devuelve la cantidad de equipos con al menos un Gunpla activo.
@@ -304,14 +305,58 @@ def ciclo_de_juego(lista_equipos,cola_turnos):
         if esta_activo(piloto):
             lista_oponentes = generar_lista_oponentes(piloto)
             indice_oponente = piloto.elegir_oponente(lista_oponentes)
+            oponente = #Gunpla
             arma_elegida    = piloto.elegir_arma(oponente)
             #aplicar funcion atacar
-        
-def calcular_daño(arma,gunpla):
-    '''Calcula el daño realizado al gunpla utilizando la formula de calculo de daño.
+            daño_aplicado = #daño - resistencia
+        if daño_aplicado = 0:
+            cola_turnos.encolar(oponente) #es un turno extra
+
+        if oponente.get_energia_restante() < 0  and abs(oponente.get_energia_restante()) > 5:
+            cola_turnos.encolar(piloto) #es un turno extra
+
+        if esta_activo(oponente) and uso_armas_melee:
+            #contraataca el oponente
+
+        cola_turnos.encolar(piloto)#se encola un turno para el piloto
+
+def calcular_daño(arma):
+    '''Calcula el daño realizado por un arma.
     '''
-    
+    daño = 0
+    for hits in range (arma.get_hits()):
+        chance_hit = randint(0,100)
+        if arma.get_precision() >= chance_hit:
+            daño += arma.get_daño()
+        if (arma.get_precision()/4) >= chance_hit:
+            daño += arma.get_daño() * 1.5
+        else:
+            daño += 0
 
+def reduccion_daño(arma, gunpla, daño):
+    '''Recibe un arma a utilizar contra el Gunpla, un Gunpla y el daño ejercido
+    por el arma, y calcula según el
+    tipo de municion que utiliza el arma, la cantidad de daño reducido por las
+    defensas del Gunpla y devuelve el valor del daño reducido'''
+    municion = arma.get_tipo_municion()
+    if municion == 'FISICA'
+        daño_reducido = daño - gunpla.get_armadura()
+    if municion == 'LASER'
+        daño_reducido = daño - (daño * gunpla.get_escudo())
+    else:#para cuando ejerce daño verdadero
+        daño_reducido = daño
+    return daño_reducido
 
-
-
+def combate(atacante, defensor, arma):
+    '''fdsfasd
+    '''
+    daño = reduccion_daño(arma, defensor, calcular_daño(arma))
+    defensor._aplicar_daño(daño)
+    tipo_arma = arma.get_tipo()
+    chance_combinar = randint(0,100)
+    if contraataque: #contraataque es un booleano que indica si es o no un contraataque
+        return
+    if tipo_arma == 'MELEE' and chance_combinar > 40:
+        arma_combinacion = atacante.elegir_arma()
+    if tipo_arma == 'RANGO' and chance_combinar > 25:
+        arma_combinacion = atacante.elegir_arma()
