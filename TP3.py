@@ -63,6 +63,8 @@ Si el arma elegida fue de tipo MELEE y el oponente no fue destruido:
 El oponente contraataca: elige un arma y la utiliza como un ataque normal. No aplican reglas de turnos extra o combinación de armas.
 Se encola un turno del jugador actual.'''
 
+import random
+
 class Gunpla():
     """Representa un Gunpla. Un Gunpla está copuesto por un Esqueleto,
      un conjunto de partes y un conjunto de armas"""
@@ -70,7 +72,7 @@ class Gunpla():
         self.partes             = [] #lista de partes adosadas al Gunpla
         self.esqueleto          = None #referencia a una instancia de la clase Esqueleto
         self.armas              = [] #lista de armas adosadas al Gunpla
-        self.energia_restante   = self.get_energia()
+        self.energia_restante   = 0
 
     def get_peso(self):
         '''Devuelve el peso total del Gunpla.
@@ -145,7 +147,7 @@ class Gunpla():
             armas_disponibles.append(arma)
         return armas_disponibles
 
-     def _set_esqueleto(self,esqueleto):
+    def _set_esqueleto(self,esqueleto):
         '''Recibe un esqueleto y lo asigna al Gunpla.
         '''
         self.esqueleto = esqueleto
@@ -169,7 +171,7 @@ class Esqueleto():
     """Representa el esqueleto interno de un Gunpla"""
     def __init__(self):
         self.velocidad = 0          #valor fijo
-        self.energia   = 0          #valor fijo >0
+        self.energia   = 100        #valor fijo >0
         self.movilidad = 100        #valor fijo >100
         self.slots     = 0          #valor fijo
 
@@ -190,17 +192,16 @@ class Esqueleto():
         tiene el esqueleto.'''
         return self.slots
 
-
 class Parte():
     """Representa una parte de un Gunpla"""
     def __init__(self):
-        self.peso_base          = peso_base #valor fijo >0
-        self.armadura_base      = armadura_base
-        self.escudo_base        = escudo
-        self.velocidad_base     = velocidad
-        self.energia_base       = energia
+        self.peso_base          = 'peso_base' #valor fijo >0
+        self.armadura_base      = 'armadura_base'
+        self.escudo_base        = 'escudo'
+        self.velocidad_base     = 'velocidad'
+        self.energia_base       = 'energia'
         self.armas              = []
-        self.tipo_parte         = tipo
+        self.tipo_parte         = 'tipo'
 
     def get_peso(self):
         '''Devuelve el peso total de la parte.
@@ -255,21 +256,20 @@ class Parte():
 class Arma():
     """Representa un arma"""
     def __init__(self):
-        self.tipo_municion  = tipo_municion     #"FISICA"|"LASER"|"HADRON"
-        self.tipo_arma      = tipo_arma         #"MELEE"|"RANGO"
-        self.clase          = clase             #str que le da un 'nombre' al arma
-        self.daño           = daño              #valor fijo
-        self.hits           = hits              #valor fijo
-        self.precision      = precision         #valor fijo, probabilidad
-        self.tiempo_recarga = tiempo_recarga    #valor fijo, turnos hasta volver a usarla
-        self.disponible     = esta_lista        #indica si el arma puede ser utilizada en este turno
-        self.tipo_parte     = 'Arma'            #siempre es arma
-        self.peso           = peso              #valor fijo
-        self.armadura       = armadura          #valor fijo
-        self.escudo         =                   #valor fijo
-        self.velocidad      =                   #valor fijo
-        self.energia        =                   #valor fijo
-
+        self.tipo_municion  = 'tipo_municion'     #"FISICA"|"LASER"|"HADRON"
+        self.tipo_arma      = 'tipo_arma'         #"MELEE"|"RANGO"
+        self.clase          = 'clase'             #str que le da un 'nombre' al arma
+        self.daño           = 'daño'              #valor fijo
+        self.hits           = 'hits'              #valor fijo
+        self.precision      = 'precision'         #valor fijo, probabilidad
+        self.tiempo_recarga = 'tiempo_recarga'    #valor fijo, turnos hasta volver a usarla
+        self.disponible     = 'esta_lista'        #indica si el arma puede ser utilizada en este turno
+        self.tipo_parte     = 'Arma'              #siempre es arma
+        self.peso           = 'peso'              #valor fijo
+        self.armadura       = 'armadura'          #valor fijo
+        self.escudo         = 0                   #valor fijo
+        self.velocidad      = 0                   #valor fijo
+        self.energia        = 100                 #valor fijo
 
     def get_velocidad(self):
         '''Devuelve la velocidad del arma. Es un valor fijo'''
@@ -306,7 +306,7 @@ class Arma():
 
     def esta_lista(self):
          '''Devuelve si el arma es capaz de ser utilizada en este turno o no'''
-        return self.disponible
+         return self.disponible
 
     def get_peso(self):
         '''Devuelve el peso total del arma.
@@ -338,8 +338,6 @@ class Arma():
         '''Devuelve el tipo de parte de un arma'''
         return self.tipo_parte
 
-
-
 class Piloto():
     '''Inteligencia artificial para controlar un Gunpla.'''
     def __init(self):
@@ -354,18 +352,18 @@ class Piloto():
         '''Devuelve el Gunpla asociado al piloto'''
         return self.gunpla
 
-    def elegir_esqueleto(lista_esqueletos):
+    def elegir_esqueleto(self, lista_esqueletos):
         '''Dada una lista de esqueletos, devuelve el índice del esqueleto a utilizar'''
         return random.choice(lista_esqueletos)
 
-    def elegir_parte(partes_disponibles):
+    def elegir_parte(self, partes_disponibles):
         '''Dado un diccionario: {tipo_parte:parte}, devuelve el tipo de parte
         que quiere elegir. Este metodo se utiliza para ir eligiendo de a una las
         partes que se van a reservar para cada piloto, de entre las cuales va a
         poder elegir para armar su modelo'''
         return random.choice(partes_disponibles.keys())
 
-    def elegir_combinacion(partes_reservadas):
+    def elegir_combinacion(self, partes_reservadas):
         '''Dada una lista con partes previamente reservadas, devuelve una lista
         con las partes a utilizar para construir el Gunpla. Este método se
         utiliza para elegir las partes que se van a utilizar en el modelo, de

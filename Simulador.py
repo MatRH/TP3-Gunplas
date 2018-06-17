@@ -69,9 +69,9 @@ Armas:
 -Luego de usar un arma, se debe esperar Tiempo de recarga turnos para volver a usarla (Vuelva a estar cargada).
 '''
 import random
-import TP3
+from TP3 import Gunpla, Esqueleto, Parte, Arma, Piloto
 from operator import itemgetter
-from math import abs
+from math import fabs
 
 def armar_equipos(lista_pilotos, cantidad_equipos):
     '''Recibe una lista de pilotos de la cual elige para armar equipos y una
@@ -86,13 +86,17 @@ def armar_equipos(lista_pilotos, cantidad_equipos):
     y Cada elemento es un piloto
     '''
     lista_equipos = []
+    pilotos_bot = [Piloto(), Piloto()]
     pilotos = lista_pilotos[:]
-    for i in range(len(lista_pilotos) % cantidad_equipos):
+
+    while (len(pilotos) % cantidad_equipos) != 0:
         pilotos.append(random.choice(pilotos_bot))
+
+    cantidad_pilotos = len(pilotos)
     while pilotos:
         equipo = []
-        for i in range(len(pilotos) / cantidad_equipos):
-            piloto = pilotos.pop(random.choice(pilotos))
+        for i in range(int((cantidad_pilotos / cantidad_equipos))):
+            piloto = pilotos.pop(pilotos.index(random.choice(pilotos)))
             equipo.append(piloto)
         lista_equipos.append(equipo)
     return lista_equipos
@@ -119,7 +123,7 @@ def generar_esqueletos(cantidad, velocidad_max, energia_max, movilidad_max, slot
     y los devuelve en una lista
     '''
     lista_esqueletos = []
-    while len(esqueletos) < cantidad:
+    while len(lista_esqueletos) < cantidad:
         esqueleto = Esqueleto()
         esqueleto.velocidad = random.randint(-velocidad_max, velocidad_max)
         esqueleto.energia = random.randint(0, energia_max)
@@ -135,8 +139,8 @@ def asignar_esqueletos(lista_esqueletos,lista_equipos):
     '''
     for equipo in lista_equipos:
         for piloto in equipo:
-            esqueleto_elegido = piloto.elegir_esqueleto()
-            piloto.get_gunpla()._set.esqueleto(esqueleto_elegido)
+            esqueleto_elegido = piloto.elegir_esqueleto(lista_esqueletos)
+            piloto.get_gunpla()._set_esqueleto(esqueleto_elegido)
 
 def generar_armas(cantidad, daño,hits,precision,peso,armadura,escudo,velocidad,energia):
     '''Recibe la cantidad de armas a generar, el daño,hits(cantidad de veces que puede atacar
@@ -144,7 +148,7 @@ def generar_armas(cantidad, daño,hits,precision,peso,armadura,escudo,velocidad,
      Devuelve la lista de armas generadas.
     '''
     lista_armas = []
-    while len(armas) < cantidad:
+    while len(lista_armas) < cantidad:
         arma                = Arma()
         arma.daño           = random.randint(1, daño)
         arma.hits           = random.randint(1, hits )
@@ -178,7 +182,7 @@ def generar_partes(cantidad, peso, armadura, escudo, velocidad, energia, prob_ar
         parte.tipo_parte         = "Nombre arma"#generador de nombres
         if random.randint(0,100) > prob_armas:
             cantidad_armas = random.randint(1,cant_max_armas)
-            parte.armas.append(generar_armas(cantidad_armas,200,2,90,0,0,0,50,0)) #se pueden cambiar los valores para que genere armas distintas dentro de las partes
+            parte.armas.append(generar_armas(cantidad_armas,200,2,90,10,10,10,50,10)) #se pueden cambiar los valores para que genere armas distintas dentro de las partes
     return lista_partes
 
 def separar_en_pilas(lista_armas,lista_partes):
