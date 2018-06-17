@@ -74,7 +74,7 @@ from operator import itemgetter
 from math import abs
 
 def armar_equipos(lista_pilotos, cantidad_equipos):
-    '''Recibe una lista de pilotos de la cual elige para armas equipos y una
+    '''Recibe una lista de pilotos de la cual elige para armar equipos y una
      cantidad de equipos a armar, divide a los pilotos equitativamente de manera
      que halla la misma cantidad de pilotos por equipo; si esto no fuera posible
      debido a que la cantidad de pilotos no fuera divisible por la cantidad de
@@ -108,7 +108,6 @@ def asignar_gunplas(lista_equipos):
             gunpla=Gunpla()
             piloto.set_gunpla(gunpla)
 
-
 def generar_esqueletos(cantidad, velocidad_max, energia_max, movilidad_max, slots_max):
     '''Recibe una cantidad de esqueletos a generar, un valor maximo para Cada
     uno de los atributos correspondiente al esqueleto, velocidad, energia, movilidad
@@ -131,7 +130,6 @@ def generar_esqueletos(cantidad, velocidad_max, energia_max, movilidad_max, slot
         esqueleto.slots = random.randint(0, slots_max)
         lista_esqueletos.append(esqueleto)
     return lista_esqueletos
-
 
 def asignar_esqueletos(lista_esqueletos,lista_equipos):
     '''Recibe una lista de esqueletos y una lista de equipos la cual es una lista de listas,
@@ -297,29 +295,6 @@ def generar_lista_oponentes(lista_equipos,piloto):
                 lista_oponentes.append(oponente)
     return lista_oponentes
 
-def ciclo_de_juego(lista_equipos,cola_turnos):
-    '''
-    '''
-    while cantidad_equipos_activos(lista_equipos) >= 2:
-        piloto = cola_turnos.desencolar()
-        if esta_activo(piloto):
-            lista_oponentes = generar_lista_oponentes(piloto)
-            indice_oponente = piloto.elegir_oponente(lista_oponentes)
-            oponente = #Gunpla
-            arma_elegida    = piloto.elegir_arma(oponente)
-            #aplicar funcion atacar
-            daño_aplicado = #daño - resistencia
-        if daño_aplicado = 0:
-            cola_turnos.encolar(oponente) #es un turno extra
-
-        if oponente.get_energia_restante() < 0  and abs(oponente.get_energia_restante()) > 5:
-            cola_turnos.encolar(piloto) #es un turno extra
-
-        if esta_activo(oponente) and uso_armas_melee:
-            #contraataca el oponente
-
-        cola_turnos.encolar(piloto)#se encola un turno para el piloto
-
 def calcular_daño(arma):
     '''Calcula el daño realizado por un arma.
     '''
@@ -362,8 +337,6 @@ def filtrar_armas_combinables(arma, gunpla):
                 armas_disponibles.append(arma)
     return armas_disponibles
 
-
-
 def combate(atacante, defensor, arma, contraataque):
     '''Recibe el piloto atacante, el piloto defensor, el arma inicial con la
     que piloto comenzó el ataque y un valor booleano que representa si el
@@ -394,3 +367,36 @@ def combate(atacante, defensor, arma, contraataque):
 
     if not contraataque:
         return daño
+
+def ciclo_de_juego(lista_equipos,cola_turnos):
+    '''
+    '''
+    indice_equipo = 0
+
+    while cantidad_equipos_activos(lista_equipos) >= 2: #ciclo de juego
+        piloto = cola_turnos.desencolar()
+        if esta_activo(piloto):
+            lista_oponentes = generar_lista_oponentes(piloto)
+            indice_oponente = piloto.elegir_oponente(lista_oponentes)
+            oponente = lista_oponentes[indice_oponente].get_gunpla
+            arma_elegida    = piloto.elegir_arma(oponente)
+            daño_aplicado = combate(piloto, lista_oponentes[indice_oponente], arma_elegida, False)
+
+        if daño_aplicado = 0:
+            cola_turnos.encolar(oponente) #es un turno extra
+
+        if oponente.get_energia_restante() < 0  and abs(oponente.get_energia_restante()) > 5:
+            cola_turnos.encolar(piloto) #es un turno extra
+
+        cola_turnos.encolar(piloto)#se encola un turno para el piloto
+
+    for equipo in lista_equipos: #devuelve el equipo y pilotos ganadores
+        indice_equipo += 1
+        for piloto in equipo:
+            if piloto.get_gunpla().get_energia_restante() > 0:
+                print (''Equipo ganador {}''.format(indice_equipo))
+                pilotos_ganadores.append(piloto)
+
+    for piloto in pilotos_ganadores:
+        print (''Pilto ganador: {} ''.format(piloto))
+        print (''Con su Gunpla: {} ''.format(piloto.get_gunpla()))

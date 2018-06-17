@@ -376,6 +376,7 @@ class Piloto():
         '''Devuelve el arma con la cual se decide atacar al oponente.
         '''
         return random.choice(self.gunpla().get_armamento())
+        
 '''Fórmulas
 Movilidad
 Siendo base la movilidad del esqueleto, peso el peso del Gunpla y velocidad la velocidad del Gunpla:
