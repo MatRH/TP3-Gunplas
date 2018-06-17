@@ -347,16 +347,50 @@ def reduccion_daño(arma, gunpla, daño):
         daño_reducido = daño
     return daño_reducido
 
-def combate(atacante, defensor, arma):
-    '''fdsfasd
+def filtrar_armas_combinables(arma, gunpla):
+    '''Recibe un arma utilizada por un Piloto y el Gunpla del piloto y devuelve
+    una lista con las posibles armas de las que puede elegir ese piloto para
+    volver a combinar su ataque'''
+    tipo = arma.get_tipo()
+    municion = arma.get_tipo_municion()
+    clase = arma.get_clase()
+    armas_adosadas = gunpla.get_armamento()
+    armas_disponibles = []
+    for arma in armas_adosadas:
+        if arma.esta_lista():
+            if arma.get_tipo() == tipo or arma.get_tipo_municion() == municion or arma.get_clase() == clase:
+                armas_disponibles.append(arma)
+    return armas_disponibles
+
+
+
+def combate(atacante, defensor, arma, contraataque):
+    '''Recibe el piloto atacante, el piloto defensor, el arma inicial con la
+    que piloto comenzó el ataque y un valor booleano que representa si el
+    ataque fue(True) o no (False) un contraataque.
+    Devuelve el daño realizado por el atacante al defensor durante el combate
     '''
     daño = reduccion_daño(arma, defensor, calcular_daño(arma))
-    defensor._aplicar_daño(daño)
+    defensor.get_gunpla()._aplicar_daño(daño)
     tipo_arma = arma.get_tipo()
     chance_combinar = randint(0,100)
+
     if contraataque: #contraataque es un booleano que indica si es o no un contraataque
         return
-    if tipo_arma == 'MELEE' and chance_combinar > 40:
-        arma_combinacion = atacante.elegir_arma()
-    if tipo_arma == 'RANGO' and chance_combinar > 25:
-        arma_combinacion = atacante.elegir_arma()
+
+    if tipo_arma == 'MELEE' and chance_combinar > 40: #combina el arma con otra
+        armas_disponibles = filtrar_armas_combinables(arma, atacante.get_gunpla())
+        arma_combinada = atacante.elegir_arma(armas_disponibles)
+        combate(atacante, defensor, arma_combinada, contraataque)
+
+    if tipo_arma == 'RANGO' and chance_combinar > 25: #combina el arma con otra
+        armas_disponibles = filtrar_armas_combinables(arma, atacante.get_gunpla())
+        arma_combinacion = atacante.elegir_arma(oponente)
+        combate(atacante, defensor, arma_combinada, contraataque)
+
+    if tipo_arma == 'MELEE':
+        defensor.elegir_arma(atacante)
+        combate(defensor, combate, arma_defensor, True)
+
+    if not contraataque:
+        return daño
