@@ -75,29 +75,26 @@ from math import abs
 
 def armar_equipos(lista_pilotos, cantidad_equipos):
     '''Recibe una lista de pilotos de la cual elige para armar equipos y una
-     cantidad de equipos a armar, divide a los pilotos equitativamente de manera
-     que halla la misma cantidad de pilotos por equipo; si esto no fuera posible
-     debido a que la cantidad de pilotos no fuera divisible por la cantidad de
-     equipos, se le pedira al usuario que agregue la cantidad necesaria de pilotos
-     para completar el equipo o en caso de que el usuario no ingrese nada se
-     autocompletaran los equipos con un piloto al azar de la biblioteca de
-     pilotos BOT.
-     Devuelve una lista de listas, donde cada sub_lista representa un equipo,
-     y Cada elemento es un piloto'''
-
-     lista_equipos              = []
-     pilotos                    = lista_pilotos[:]
-
-     for i in range(len(lista_pilotos) % cantidad_equipos):
-         pilotos.append(random.choice(pilotos_bot))
-
-     while pilotos:
-         equipo = []
-         for i in range(len(pilotos) / cantidad_equipos):
-             piloto = pilotos.pop(random.choice(pilotos))
-             equipo.append(piloto)
+    cantidad de equipos a armar, divide a los pilotos equitativamente de manera
+    que halla la misma cantidad de pilotos por equipo; si esto no fuera posible
+    debido a que la cantidad de pilotos no fuera divisible por la cantidad de
+    equipos, se le pedira al usuario que agregue la cantidad necesaria de pilotos
+    para completar el equipo o en caso de que el usuario no ingrese nada se
+    autocompletaran los equipos con un piloto al azar de la biblioteca de
+    pilotos BOT.
+    Devuelve una lista de listas, donde cada sub_lista representa un equipo,
+    y Cada elemento es un piloto
+    '''
+    lista_equipos = []
+    pilotos = lista_pilotos[:]
+    for i in range(len(lista_pilotos) % cantidad_equipos):
+        pilotos.append(random.choice(pilotos_bot))
+    while pilotos:
+        equipo = []
+        for i in range(len(pilotos) / cantidad_equipos):
+            piloto = pilotos.pop(random.choice(pilotos))
+            equipo.append(piloto)
         lista_equipos.append(equipo)
-
     return lista_equipos
 
 def asignar_gunplas(lista_equipos):
@@ -105,7 +102,7 @@ def asignar_gunplas(lista_equipos):
     '''
     for equipo in lista_equipos:
         for piloto in equipo:
-            gunpla=Gunpla()
+            gunpla = Gunpla()
             piloto.set_gunpla(gunpla)
 
 def generar_esqueletos(cantidad, velocidad_max, energia_max, movilidad_max, slots_max):
@@ -160,14 +157,14 @@ def generar_armas(cantidad, daño,hits,precision,peso,armadura,escudo,velocidad,
         arma.tipo_parte     = 'Arma'
         arma.tipo_municion  = random.choice(('FISICA', 'LASER', 'HADRON'))
         arma.tipo_arma      = random.choice(('MELEE', 'RANGO'))
-        arma.clase          = #generador de nombres
+        arma.clase          = "#generador de nombres"
         lista_armas.append(arma)
     return lista_armas
 
 def generar_partes(cantidad, peso, armadura, escudo, velocidad, energia, prob_armas, cant_max_armas):
     '''Recibe la cantidad de partes a generar, el peso , armadura, energia, escudo ,velocidad maximos,
     la probabilidad de que la parte contenga armas y la cantidad maxima de armas que puede tener una parte.
-    Devuelve la lista de armas generadas.
+    Devuelve la lista de partes generadas.
     '''
     lista_partes = []
     while len(lista_partes) < cantidad:
@@ -178,10 +175,10 @@ def generar_partes(cantidad, peso, armadura, escudo, velocidad, energia, prob_ar
         parte.velocidad_base     = random.randint(-velocidad, velocidad)
         parte.energia_base       = random.randint(-energia, energia)
         parte.armas              = []
-        parte.tipo_parte         = #generador de nombres
+        parte.tipo_parte         = "Nombre arma"#generador de nombres
         if random.randint(0,100) > prob_armas:
             cantidad_armas = random.randint(1,cant_max_armas)
-            parte.armas.append(generar_armas(cantidad_armas, daño,hits,precision, peso ,armadura,escudo,velocidad,energia))
+            parte.armas.append(generar_armas(cantidad_armas,200,2,90,0,0,0,50,0)) #se pueden cambiar los valores para que genere armas distintas dentro de las partes
     return lista_partes
 
 def separar_en_pilas(lista_armas,lista_partes):
@@ -240,7 +237,7 @@ def reservar_partes(lista_pilas, ronda):
                 pila.apilar(parte)
     return partes_reservadas
 
-def elegir_gunplas(ronda, partes_reservadas):
+def elegir_partes(ronda, partes_reservadas):
     '''Recibe la ronda de pilotos y un diccionario de partes reservadas, donde
     el numero asignado previamente a cada piloto es la clave y el valor son
     las partes que este piloto reservó.
@@ -256,7 +253,14 @@ def equipar_gunplas(ronda, partes_armar_gunplas):
     '''Recibe la ronda de pilotos y un diccionario de partes para armar los
     Gunplas de cada piloto, donde las claves son el número de piloto y los
     valores son las partes que este piloto eligió'''
-    for
+    for numero_piloto, piloto in ronda:
+        lista_armas = []
+        lista_partes = partes_armar_gunplas[numero_piloto][:]
+        for parte in lista_partes:
+            if parte.get_tipo_parte() == 'Arma':
+                lista_armas.append(lista_partes.pop(lista_partes.index(parte)))
+        piloto._set_partes(lista_partes)
+        piloto._set_armas(lista_armas)
 
 def armar_cola_turnos(ronda):
     '''Recibe la ronda de pilotos y los organiza según sus velocidades.
@@ -314,9 +318,9 @@ def reduccion_daño(arma, gunpla, daño):
     tipo de municion que utiliza el arma, la cantidad de daño reducido por las
     defensas del Gunpla y devuelve el valor del daño reducido'''
     municion = arma.get_tipo_municion()
-    if municion == 'FISICA'
+    if municion == 'FISICA':
         daño_reducido = daño - gunpla.get_armadura()
-    if municion == 'LASER'
+    if municion == 'LASER':
         daño_reducido = daño - (daño * gunpla.get_escudo())
     else:#para cuando ejerce daño verdadero
         daño_reducido = daño
@@ -382,7 +386,7 @@ def ciclo_de_juego(lista_equipos,cola_turnos):
             arma_elegida    = piloto.elegir_arma(oponente)
             daño_aplicado = combate(piloto, lista_oponentes[indice_oponente], arma_elegida, False)
 
-        if daño_aplicado = 0:
+        if daño_aplicado == 0:
             cola_turnos.encolar(oponente) #es un turno extra
 
         if oponente.get_energia_restante() < 0  and abs(oponente.get_energia_restante()) > 5:
@@ -394,9 +398,27 @@ def ciclo_de_juego(lista_equipos,cola_turnos):
         indice_equipo += 1
         for piloto in equipo:
             if piloto.get_gunpla().get_energia_restante() > 0:
-                print (''Equipo ganador {}''.format(indice_equipo))
+                print ('Equipo ganador {}'.format(indice_equipo))
                 pilotos_ganadores.append(piloto)
 
     for piloto in pilotos_ganadores:
-        print (''Pilto ganador: {} ''.format(piloto))
-        print (''Con su Gunpla: {} ''.format(piloto.get_gunpla()))
+        print ('Pilto ganador: {}'.format(piloto))
+        print ('Con su Gunpla: {}'.format(piloto.get_gunpla()))
+
+def main():
+    lista_pilotos = [Piloto(), Piloto(), Piloto(), Piloto()]
+    lista_equipos = armar_equipos(lista_pilotos, 2)
+    asignar_gunplas(lista_equipos)   #asigna un Gunpla a cada Piloto
+    lista_esqueletos = generar_esqueletos(10, 200, 200, 200, 4)
+    asignar_esqueletos(lista_esqueletos, lista_equipos)
+    lista_armas = generar_armas(20, 750 , 5 , 90 , 100 , 50 , 50 , 100 , 50)
+    lista_partes = generar_partes(50, 200 , 200 , 200, 300, 200, 30 , 4)#los stats de las armas generadas dentro de las partes se cambian desde dentro de la funcion generar_partes
+    lista_pilas = separar_en_pilas(lista_armas, lista_partes)
+    ronda = armar_ronda(lista_equipos)
+    partes_reservadas = reservar_partes(lista_pilas, ronda)
+    partes_armar_gunplas = elegir_partes(ronda, partes_reservadas)
+    equipar_gunplas(ronda, partes_armar_gunplas) #Le asigna al piloto de cada gunpla sus partes y armas
+    cola_turnos = armar_cola_turnos(ronda)
+    ciclo_de_juego(lista_equipos, cola_turnos)
+
+main()

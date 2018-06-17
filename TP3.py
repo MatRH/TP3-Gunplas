@@ -155,6 +155,16 @@ class Gunpla():
         a la cantidad de energia restante'''
         self.energia_restante -= daño
 
+    def _set_partes(self, lista_partes):
+        '''Recibe una lista de partes a adosar al Gunpla y cambia valor del
+        atributo partes por esta lista de partes'''
+        self.partes = lista_partes
+
+    def _set_armas(self, lista_armas):
+        '''Recibe una lista de armas a adosar al Gunpla y cambia valor del
+        atributo armas por esta lista de armas'''
+        self.partes = lista_armas
+
 class Esqueleto():
     """Representa el esqueleto interno de un Gunpla"""
     def __init__(self):
@@ -376,7 +386,7 @@ class Piloto():
         '''Devuelve el arma con la cual se decide atacar al oponente.
         '''
         return random.choice(self.gunpla().get_armamento())
-        
+
 '''Fórmulas
 Movilidad
 Siendo base la movilidad del esqueleto, peso el peso del Gunpla y velocidad la velocidad del Gunpla:
