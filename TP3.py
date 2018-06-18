@@ -74,6 +74,9 @@ class Gunpla():
         self.armas              = [] #lista de armas adosadas al Gunpla
         self.energia_restante   = 0
 
+    def __str__(self):
+        return ('partes: {} esqueleto: {} armas: {} energia restante: {}'.format(self.partes,self.esqueleto,self.armas,self.energia_restante))
+
     def get_peso(self):
         '''Devuelve el peso total del Gunpla.
         Un Gunpla pesa lo que pesa la sumatoria de sus partes y armas'''
@@ -175,6 +178,9 @@ class Esqueleto():
         self.movilidad = 100        #valor fijo >100
         self.slots     = 0          #valor fijo
 
+    def __str__(self):
+        return ('velocidad: {} energia: {} movilidad: {} slots: {}'.format(self.velocidad,self.energia,self.movilidad,self.slots))
+
     def get_velocidad(self):
         '''Devuelve la velocidad del esqueleto'''
         return self.velocidad
@@ -202,6 +208,9 @@ class Parte():
         self.energia_base       = 'energia'
         self.armas              = []
         self.tipo_parte         = 'tipo'
+
+    def __str__(self):
+        return ('tipo : {} peso: {} armadura: {} escudo: {} velocidad: {} energia: {} armas: {}'.format(self.tipo_parte,self.peso_base,self.armadura_base,self.escudo_base,self.velocidad_base,self.energia_base,self.armas))
 
     def get_peso(self):
         '''Devuelve el peso total de la parte.
@@ -361,8 +370,9 @@ class Piloto():
         que quiere elegir. Este metodo se utiliza para ir eligiendo de a una las
         partes que se van a reservar para cada piloto, de entre las cuales va a
         poder elegir para armar su modelo'''
-        return random.choice(partes_disponibles.keys())
-
+        for tipo, parte in partes_disponibles.items():
+            return parte
+        
     def elegir_combinacion(self, partes_reservadas):
         '''Dada una lista con partes previamente reservadas, devuelve una lista
         con las partes a utilizar para construir el Gunpla. Este método se

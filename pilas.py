@@ -9,10 +9,10 @@ class Pila():
 		'''
 		return self.datos.append(dato)
 
-	def desapilar(self,dato):
+	def desapilar(self,):
 		'''Metodo para desapilar datos de la pila.
 		'''
-		return self.datos.pop(dato)
+		return self.datos.pop()
 
 	def esta_vacia(self):
 		'''Metodo para verificar si una pila esta vacia.
@@ -35,8 +35,8 @@ class _Nodo():
 			self.prim = nuevo
 		else:
 			self.ult.prox = nuevo
-		self.ult = nuevo
-			self.ult.prox 
+			self.ult = nuevo
+			self.ult.prox
 
 class Cola():
 	'''Representa una cola.
@@ -63,5 +63,3 @@ class Cola():
 		if not self.prim:
 			self.ult = None
 		return dato
-
-
