@@ -150,11 +150,6 @@ class Gunpla():
         '''
         self.esqueleto = esqueleto
 
-    def _aplicar_daño(self, daño):
-        '''Recibe un valor de daño ejercido sobre el Gunpla y se lo resta
-        a la cantidad de energia restante'''
-        self.energia_restante -= daño
-
 class Esqueleto():
     """Representa el esqueleto interno de un Gunpla"""
     def __init__(self):
@@ -302,7 +297,7 @@ class Arma():
         '''Devuelve el peso total del arma.
         '''
         return self.peso
-
+        
 
     def get_armadura(self):
         '''Devuelve la armadura total del arma.
@@ -323,16 +318,16 @@ class Arma():
         '''Devuelve la energía total del arma.
         '''
         return self.energia
-
+        
     def get_tipo_parte(self):
         '''Devuelve el tipo de parte de un arma'''
         return self.tipo_parte
 
 
-
+    
 class Piloto():
     '''Inteligencia artificial para controlar un Gunpla.'''
-    def __init(self):
+    def __init__(self):
         '''Crea un piloto y no recibe ningun parámetro'''
         self.gunpla = Gunpla #Gunpla asociado al piloto
 
@@ -370,12 +365,11 @@ class Piloto():
     def elegir_oponente(self,lista_oponentes):
         '''Dada una lista de oponentes,devuelve el indice del gunpla al cual se decide atacar.
         '''
-        return index(random.choice(lista_oponentes))#para la IA deberia utilizar un contador para devolver la posicion correcta
-
+        return index(random.choice(lista_oponentes))
+        
     def elegir_arma(self,oponente):
         '''Devuelve el arma con la cual se decide atacar al oponente.
         '''
-        return random.choice(self.gunpla().get_armamento())
 '''Fórmulas
 Movilidad
 Siendo base la movilidad del esqueleto, peso el peso del Gunpla y velocidad la velocidad del Gunpla:
