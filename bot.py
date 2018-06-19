@@ -71,33 +71,52 @@ class Bot_tanque(Piloto):
     def elegir_arma(lista_armas,oponente):
         '''Devuelve el arma con la cual se decide atacar al oponente.
         '''
-        #arma_energetica = lista_armas[0]
-        arma_daño        = lista_armas[0]
-        arma_escudo      = lista_armas[0]
-        #arma_tipo       = lista_armas[0]
-        #arma_rango       = lista_armas[0]
-        #arma_melee       =
-        armas_oponente   = oponente.get_armamento()
-        arma_elegida     = lista_armas[0]
+        armas_oponente      = oponente.get_armamento()
+        arma_elegida        = lista_armas[0]
+        armas_rango         = []
+        armas_melee         = []
+        arma_oponente_melee = None
+        arma_elegida_rango  = armas_rango[0]
+        arma_elegida_melee  = armas_melee[0]
 
         for arma in lista_armas:
-            for arma_oponente in armas_oponente:
+            if arma.get_tipo() == "RANGO" and arma.esta_lista():
+                armas_rango.append(arma)
+            if arma.get_tipo() == "MELEE" and arma.esta_lista():
+                armas_melee.append(arma)
+            
+        for arma_oponente in armas_oponente:
                 if arma_oponente.get_tipo() == "MELEE":
-                    if arma.get_tipo() == "RANGO":
-                        arma_elegida = arma
-                    if arma.get_daño() > arma_oponente.get_daño():
-                        arma_elegida = arma
-                    if arma.get_daño() == arma_oponente.get_daño():
-                        if arma.get_escudo() > arma_oponente.get_escudo():
-                            arma_elegida = arma
-                        if arma.get_escudo() == arma_oponente.get_escudo():
-                            
+                    arma_oponente_melee = True
+                    break
+                else:
+                    arma_oponente_melee = False
 
-
-
-
-
-
+        if arma_oponente_melee:
+            for arma_rango in armas_rango: 
+                if arma_rango.get_daño() * arma_rango.get_hits() > arma_elegida_rango.get_daño() * arma_elegida_rango.get_hits():
+                    arma_elegida = arma_rango
+                if arma_rango.get_daño() * arma_rango.get_hits() == arma_elegida_rango.get_daño() * arma_elegida_rango.get_hits():
+                    if arma_rango.get_daño() > arma_elegida.get_daño():
+                        arma_elegida = arma_rango
+                    if arma_rango.get_daño() == arma_elegida_rango.get_daño():
+                        if arma_rango.get_hits() >= arma_elegida_rango.get_hits():
+                            arma_elegida = arma_rango
+                if arma_rango.get_daño() * arma_rango.get_hits() < arma_elegida_rango.get_daño() * arma_elegida_rango.get_hits():
+                    arma_elegida = arma_elegida_rango
+        else:
+            for arma_melee in armas_melee:
+                if arma_melee.get_daño() * arma_melee.get_hits() > arma_elegida_melee.get_daño() * arma_elegida_melee.get_hits():
+                    arma_elegida = arma_melee
+                if arma_melee.get_daño() * arma_melee.get_hits() == arma_elegida_melee.get_daño() * arma_elegida_melee.get_hits():
+                    if arma_melee.get_daño() > arma_elegida_melee.get_daño():
+                        arma_elegida = arma_melee
+                    if arma_melee.get_daño() == arma_elegida_melee.get_daño():
+                        if arma_melee.get_hits() >= arma_elegida_melee.get_hits():
+                            arma_elegida = arma_melee
+                if arma_melee.get_daño() * arma_melee.get_hits() < arma_elegida_melee.get_daño() * arma_elegida_melee.get_hits():
+                    arma_elegida = arma_elegida_melee
+        return arma_elegida
 
 
     def elegir_combinacion(partes_reservadas):
