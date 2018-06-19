@@ -1,8 +1,8 @@
 import TP3
 
 class Bot_tanque(Piloto):
-	'''Inteligencia artificial para controlar un Gunpla.'''
-    def __init(self):
+    '''Inteligencia artificial para controlar un Gunpla.'''
+    def __init__(self):
         '''Crea un piloto y no recibe ningun parámetro'''
         self.gunpla = Gunpla #Gunpla asociado al piloto
 
@@ -21,10 +21,10 @@ class Bot_tanque(Piloto):
         esqueleto_promedio   = lista_esqueletos[0]
         for esqueleto in lista_esqueletos:
         	if esqueleto.get_energia() > esqueleto_energetico.get_energia():
-        		esqueleto_energetico     = esqueleto        		
-			if esqueleto.get_energia()   == esqueleto_energetico.get_energia():
-				if esqueleto.get_slots() > esqueleto_energetico.get_slots():
-					esqueleto_energetico = esqueleto
+                esqueleto_energetico = esqueleto   		
+            if esqueleto.get_energia() == esqueleto_energetico.get_energia():
+                if esqueleto.get_slots() > esqueleto_energetico.get_slots():
+                esqueleto_energetico = esqueleto
 
         	if esqueleto.get_slots() > esqueleto_capacidad.get_slots():
         		esqueleto_capacidad = esqueleto
