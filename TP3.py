@@ -243,7 +243,7 @@ class Parte():
         '''Devuelve la velocidad total de la parte.
         Un Gunpla tiene tanta velocidad como la sumatoria de las velocidades
         de sus partes y esqueleto'''
-        return self.velocidad
+        return self.velocidad_base
 
     def get_energia(self):
         '''Devuelve la energía total de la parte.

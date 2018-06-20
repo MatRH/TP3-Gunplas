@@ -1,5 +1,7 @@
 from TP3 import Gunpla, Esqueleto, Parte, Arma, Piloto
 from math import fabs
+from Simulador import generar_partes, generar_armas
+import random
 
 def calcular_dps_arma(arma):
     '''Recibe un objeto arma y devuelve el dps (daño por turno) que puede
@@ -10,7 +12,7 @@ def calcular_dps_arma(arma):
     dps = (hits * dmg)/cd
     return dps
 
-def nivel_amenaza(gunpla):
+def nivel_poder(gunpla):
     '''Recibe un gunpla y estudia sus partes y armas y devuelve un valor
     que representa el nivel de amenaza que presenta ese gunpla en el turno
     proximo'''
@@ -53,6 +55,8 @@ class Piloto(): #Ninja
     def __init(self):
         '''Crea un piloto y no recibe ningun parámetro'''
         self.gunpla = Gunpla #Gunpla asociado al piloto
+        self.armas_elegidas = 0
+        self.partes_elegidas = 0
 
     def set_gunpla(self, gunpla):
         '''Asigna un Gunpla a un piloto'''
@@ -71,15 +75,35 @@ class Piloto(): #Ninja
         que quiere elegir. Este metodo se utiliza para ir eligiendo de a una las
         partes que se van a reservar para cada piloto, de entre las cuales va a
         poder elegir para armar su modelo'''
+        armas_adosadas = []
         armas_disponibles = []
         partes = []
+        mejor_parte = random.choice(list(partes_disponibles.keys()))
         for tipo, parte in partes_disponibles.items():
-            if tipo = 'Arma':
-                armas_disponibles.append(arma)
+            if tipo == 'Arma':
+                arma = parte
+                armas_adosadas.append(tipo, parte, [parte])
             else:
-                
+                if calcular_handicap(parte) < calcular_handicap(mejor_parte):
+                    mejor_parte = parte
+                if parte.get_armamento() != []:
+                    armas_adosadas.append(tipo, parte, parte.get_armamento())
+        for tipo, parte, armas in armas_adosadas:
+            for arma in armas:
+                armas_disponibles.append(arma)
 
-
+        mejor_arma = buscar_mejor_arma(armas_adosadas)
+        if mejor_arma == arma and (self.armas_elegidas < 2 or self.armas_elegidas < self.partes_elegidas /2):
+            self.armas_elegidas += 1
+            return 'Arma'
+        for tipo, parte, armas in armas_adosadas:
+            for arma in armas:
+                if mejor_arma == arma and calcular_handicap(parte) < 3*calcular_handicap(mejor_parte)/4:
+                    return tipo
+        else:
+            for tipo , parte in partes_disponibles.items():
+                if parte == mejor_parte:
+                    return tipo
 
     def elegir_combinacion(self, partes_reservadas):
         '''Dada una lista con partes previamente reservadas, devuelve una lista
@@ -102,3 +126,16 @@ class Piloto(): #Ninja
         '''Devuelve el arma con la cual se decide atacar al oponente.
         '''
         return random.choice(self.gunpla().get_armamento())
+
+def probar_piloto():
+    partes_disponibles = {}
+    piloto = Piloto()
+    lista_partes = generar_partes(5, 200 , 200 , 200, 300, 200, 30 , 4)
+    lista_armas = generar_armas(2, 750 , 5 , 90 , 100 , 50 , 50 , 100 , 50)
+    for parte in lista_partes:
+        partes_disponibles[parte.get_tipo_parte()] = parte
+    for parte in lista_armas:
+        partes_disponibles[parte.get_tipo_parte()] = parte
+    print(piloto.elegir_parte(partes_disponibles))
+
+probar_piloto()

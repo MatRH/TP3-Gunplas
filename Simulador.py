@@ -479,4 +479,4 @@ def main():
     cola_turnos = armar_cola_turnos(ronda)
     ciclo_de_juego(lista_equipos, cola_turnos)
 
-main()
+#main()
