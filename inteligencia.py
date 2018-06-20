@@ -1,4 +1,5 @@
 from TP3 import Gunpla, Esqueleto, Parte, Arma, Piloto
+from math import fabs
 
 def calcular_dps_arma(arma):
     '''Recibe un objeto arma y devuelve el dps (daño por turno) que puede
@@ -20,12 +21,34 @@ def nivel_amenaza(gunpla):
             dps += calcular_dps_arma(arma)
     return energia * dps
 
+def calcular_handicap(parte):
+    '''Recibe una parte y devuelve un valor que representa cuanto reducira los
+    atributos del gunpla si se la equipa'''
+    atributos = [parte.get_energia(), parte.get_escudo(), parte.get_armadura(), parte.get_velocidad()]
+    peso = parte.get_peso()
+    handicap = fabs(peso)
+    for atributo in atributos:
+        if atributo < 0:
+            handicap *= fabs(atributo)
+    return handicap
+
+def buscar_mejor_arma(lista_armas):
+    '''Recibe una lista de armas y  devuelve la mejor arma para ese
+    gunpla'''
+    mejor_arma = lista_armas[0]
+    for arma in lista_armas:
+        dps_mejor = calcular_dps_arma(mejor_arma)
+        dps_arma = calcular_dps_arma(arma)
+        if arma.tipo_municion() == 'HADRON' and dps_arma > dps_mejor/2:
+            mejor_arma = arma
+        if dps_arma > dps_mejor and calcular_handicap(arma) <= calcular_handicap(mejor_arma) :
+            mejor_arma = arma
+        if dps_arma > dps_mejor*3/4 and calcular_handicap(arma) <= calcular_handicap(mejor_arma):
+            mejor_arma = arma
+    return mejor_arma
 
 
-
-
-
-class Piloto():
+class Piloto(): #Ninja
     '''Inteligencia artificial para controlar un Gunpla.'''
     def __init(self):
         '''Crea un piloto y no recibe ningun parámetro'''
@@ -48,8 +71,15 @@ class Piloto():
         que quiere elegir. Este metodo se utiliza para ir eligiendo de a una las
         partes que se van a reservar para cada piloto, de entre las cuales va a
         poder elegir para armar su modelo'''
+        armas_disponibles = []
+        partes = []
         for tipo, parte in partes_disponibles.items():
-            return parte
+            if tipo = 'Arma':
+                armas_disponibles.append(arma)
+            else:
+                
+
+
 
     def elegir_combinacion(self, partes_reservadas):
         '''Dada una lista con partes previamente reservadas, devuelve una lista
