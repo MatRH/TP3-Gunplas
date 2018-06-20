@@ -270,15 +270,18 @@ class Arma():
         self.clase          = 'clase'             #str que le da un 'nombre' al arma
         self.daño           = 'daño'              #valor fijo
         self.hits           = 'hits'              #valor fijo
-        self.precision      = 'precision'         #valor fijo, probabilidad
-        self.tiempo_recarga = 'tiempo_recarga'    #valor fijo, turnos hasta volver a usarla
-        self.disponible     = 'esta_lista'        #indica si el arma puede ser utilizada en este turno
+        self.precision      = 100                 #valor fijo, probabilidad
+        self.tiempo_recarga = 0                   #valor fijo, turnos hasta volver a usarla
+        self.cooldown       = 0
         self.tipo_parte     = 'Arma'              #siempre es arma
         self.peso           = 'peso'              #valor fijo
         self.armadura       = 'armadura'          #valor fijo
         self.escudo         = 0                   #valor fijo
         self.velocidad      = 0                   #valor fijo
         self.energia        = 100                 #valor fijo
+
+    def __str__(self):
+        return ('Clase: {} municion: {} Tipo: {} Daño: {} Hits: {} peso: {} armadura: {} escudo: {} velocidad: {} energia: {}'.format(self.clase, self.tipo_municion, self.tipo_arma, self.daño, self.hits, self.peso,self.armadura,self.escudo,self.velocidad,self.energia,))
 
     def get_velocidad(self):
         '''Devuelve la velocidad del arma. Es un valor fijo'''
@@ -314,9 +317,20 @@ class Arma():
         return self.tiempo_recarga
 
     def esta_lista(self):
-         '''Devuelve si el arma es capaz de ser utilizada en este turno o no'''
-         return self.disponible
+        '''Devuelve si el arma es capaz de ser utilizada en este turno o no'''
+        if self.cooldown != 0:
+            return False
+        return True
 
+    def actualizar_cooldown(self):
+        '''Actualiza el valor de self.cooldown, reduce en un punto su valor'''
+        self.cooldown -= 1
+
+    def disparar(self):
+        '''Actualiza el valor de self.cooldown, cambia el valor por el valor de
+        self.tiempo_recarga'''
+        self.cooldown = self.tiempo_recarga
+        
     def get_peso(self):
         '''Devuelve el peso total del arma.
         '''
@@ -372,7 +386,7 @@ class Piloto():
         poder elegir para armar su modelo'''
         for tipo, parte in partes_disponibles.items():
             return parte
-        
+
     def elegir_combinacion(self, partes_reservadas):
         '''Dada una lista con partes previamente reservadas, devuelve una lista
         con las partes a utilizar para construir el Gunpla. Este método se

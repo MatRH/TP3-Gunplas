@@ -4,6 +4,13 @@ class Pila():
 	def __init__(self):
 		self.datos = []
 
+	def __str__(self):
+		display = '['
+		for dato in self.datos:
+			display += str(dato)
+		display += ']'
+		return display
+
 	def apilar(self,dato):
 		'''Metodo para apilar datos a la pila.
 		'''
