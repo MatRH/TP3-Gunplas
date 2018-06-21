@@ -243,7 +243,7 @@ class Parte():
         '''Devuelve la velocidad total de la parte.
         Un Gunpla tiene tanta velocidad como la sumatoria de las velocidades
         de sus partes y esqueleto'''
-        return self.velocidad
+        return self.velocidad_base
 
     def get_energia(self):
         '''Devuelve la energía total de la parte.
@@ -270,15 +270,18 @@ class Arma():
         self.clase          = 'clase'             #str que le da un 'nombre' al arma
         self.daño           = 'daño'              #valor fijo
         self.hits           = 'hits'              #valor fijo
-        self.precision      = 'precision'         #valor fijo, probabilidad
-        self.tiempo_recarga = 'tiempo_recarga'    #valor fijo, turnos hasta volver a usarla
-        self.disponible     = 'esta_lista'        #indica si el arma puede ser utilizada en este turno
+        self.precision      = 100                 #valor fijo, probabilidad
+        self.tiempo_recarga = 0                   #valor fijo, turnos hasta volver a usarla
+        self.cooldown       = 0
         self.tipo_parte     = 'Arma'              #siempre es arma
         self.peso           = 'peso'              #valor fijo
         self.armadura       = 'armadura'          #valor fijo
         self.escudo         = 0                   #valor fijo
         self.velocidad      = 0                   #valor fijo
         self.energia        = 100                 #valor fijo
+
+    def __str__(self):
+        return ('Clase: {} municion: {} Tipo: {} Daño: {} Hits: {} peso: {} armadura: {} escudo: {} velocidad: {} energia: {}'.format(self.clase, self.tipo_municion, self.tipo_arma, self.daño, self.hits, self.peso,self.armadura,self.escudo,self.velocidad,self.energia,))
 
     def get_velocidad(self):
         '''Devuelve la velocidad del arma. Es un valor fijo'''
@@ -314,14 +317,25 @@ class Arma():
         return self.tiempo_recarga
 
     def esta_lista(self):
-         '''Devuelve si el arma es capaz de ser utilizada en este turno o no'''
-         return self.disponible
+        '''Devuelve si el arma es capaz de ser utilizada en este turno o no'''
+        if self.cooldown != 0:
+            return False
+        return True
+
+    def actualizar_cooldown(self):
+        '''Actualiza el valor de self.cooldown, reduce en un punto su valor'''
+        self.cooldown -= 1
+
+    def disparar(self):
+        '''Actualiza el valor de self.cooldown, cambia el valor por el valor de
+        self.tiempo_recarga'''
+        self.cooldown = self.tiempo_recarga
 
     def get_peso(self):
         '''Devuelve el peso total del arma.
         '''
         return self.peso
-        
+
 
     def get_armadura(self):
         '''Devuelve la armadura total del arma.
@@ -342,15 +356,14 @@ class Arma():
         '''Devuelve la energía total del arma.
         '''
         return self.energia
-        
+
     def get_tipo_parte(self):
         '''Devuelve el tipo de parte de un arma'''
         return self.tipo_parte
 
-
 class Piloto():
     '''Inteligencia artificial para controlar un Gunpla.'''
-    def __init__(self):
+    def __init(self):
         '''Crea un piloto y no recibe ningun parámetro'''
         self.gunpla = Gunpla #Gunpla asociado al piloto
 
@@ -373,7 +386,7 @@ class Piloto():
         poder elegir para armar su modelo'''
         for tipo, parte in partes_disponibles.items():
             return parte
-        
+
     def elegir_combinacion(self, partes_reservadas):
         '''Dada una lista con partes previamente reservadas, devuelve una lista
         con las partes a utilizar para construir el Gunpla. Este método se
@@ -389,14 +402,12 @@ class Piloto():
     def elegir_oponente(self,lista_oponentes):
         '''Dada una lista de oponentes,devuelve el indice del gunpla al cual se decide atacar.
         '''
-        return index(random.choice(lista_oponentes))
-        
+        return index(random.choice(lista_oponentes))#para la IA deberia utilizar un contador para devolver la posicion correcta
+
     def elegir_arma(self,oponente):
         '''Devuelve el arma con la cual se decide atacar al oponente.
         '''
-
         return random.choice(self.gunpla().get_armamento())
-
 
 '''Fórmulas
 Movilidad
